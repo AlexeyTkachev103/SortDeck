@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Сортировка</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowLeft") swipe("left");
+                if (e.key === "ArrowRight") swipe("right");
+            });
+        });
+
+        function swipe(direction) {
+            fetch(`/swipe/${direction}`, {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ item: {{ item|tojson }} })
+            }).then(() => {
+                window.location.reload();
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>{{ topic }}</h2>
+    <div class="card">
+        {% for key, value in item.items() %}
+            {% if value|string and value.startswith("http") and (".jpg" in value or ".png" in value) %}
+                <img src="{{ value }}" alt="image" width="200">
+            {% else %}
+                <p><strong>{{ key }}:</strong> {{ value }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <p>{{ index }} из {{ total }}</p>
+    <button onclick="swipe('left')">← Нет</button>
+    <button onclick="swipe('right')">Да →</button>
+</body>
+</html>
