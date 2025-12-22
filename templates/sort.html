@@ -25,11 +25,14 @@
 <body>
     <h2>{{ topic }}</h2>
     <div class="card">
+        {% if image_url %}
+            <p><strong>{{ image_column }}:</strong></p>
+            <img src="{{ image_url }}" alt="image">
+        {% endif %}
+
         {% for key, value in item.items() %}
-            {% if value|string and value.startswith("http") and (".jpg" in value or ".png" in value) %}
-                <img src="{{ value }}" alt="image" width="200">
-            {% else %}
-                <p><strong>{{ key }}:</strong> {{ value }}</p>
+            {% if key != image_column %}
+                <p><strong>{{ key }}:</strong><br> {{ value|replace('http', '<br>http')|safe }}</p>
             {% endif %}
         {% endfor %}
     </div>

@@ -14,27 +14,31 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def index():
     if request.method == 'POST':
         topic = request.form['topic']
+        image_column = request.form.get('image_column') or None
         file = request.files['file']
+
         if file.filename.endswith('.csv'):
             df = pd.read_csv(file)
         elif file.filename.endswith('.json'):
             df = pd.read_json(file)
         else:
-            return "Формат не поддерживается. Только CSV и JSON."
+            return "Формат не поддерживается."
 
         session_id = str(uuid.uuid4())
         session['id'] = session_id
-
-        path = os.path.join(UPLOAD_FOLDER, session_id)
-        os.makedirs(path, exist_ok=True)
-        df.to_json(os.path.join(path, 'data.json'), orient='records')
         session['topic'] = topic
+        session['image_column'] = image_column
         session['index'] = 0
         session['yes'] = []
         session['no'] = []
 
+        path = os.path.join(UPLOAD_FOLDER, session_id)
+        os.makedirs(path, exist_ok=True)
+        df.to_json(os.path.join(path, 'data.json'), orient='records')
+
         return redirect('/sort')
     return render_template('index.html')
+
 
 
 @app.route('/sort', methods=['GET', 'POST'])
@@ -51,7 +55,25 @@ def sort():
         return redirect('/result')
 
     item = df.iloc[index].to_dict()
-    return render_template('sort.html', item=item, index=index+1, total=len(df), topic=session['topic'])
+
+    # Извлечение URL изображения
+    image_url = None
+    image_column = session.get('image_column')
+    if image_column and image_column in item:
+        parts = str(item[image_column]).split()
+        for part in parts:
+            if part.startswith('http') and ('.jpg' in part or '.png' in part):
+                image_url = part
+                break
+
+    return render_template('sort.html',
+                           item=item,
+                           index=index + 1,
+                           total=len(df),
+                           topic=session['topic'],
+                           image_url=image_url,
+                           image_column=image_column)
+
 
 
 @app.route('/swipe/<direction>', methods=['POST'])
