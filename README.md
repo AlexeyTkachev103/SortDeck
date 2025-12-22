@@ -32,6 +32,3 @@ A simple web application for sorting data from a CSV or JSON file.
     *   After sorting all the items, you will be taken to a results page.
     *   Click "Download result" to download a zip file containing `yes.csv` and `no.csv`.
 
-## Example GIF
-
-![Card Sort App Demo](https://i.imgur.com/example.gif)
