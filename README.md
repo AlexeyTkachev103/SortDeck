@@ -1,34 +1,30 @@
 # Card Sort App
 
-A simple web application for sorting data from a CSV or JSON file.
+A small web app for sorting records from a CSV or JSON file. Upload a file, choose a topic, mark each record Yes or No, then download the results as CSV files in a ZIP archive.
 
-## How to Use
+## Requirements
 
-1.  **Run the application:**
+- Python 3.13 or newer
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) for installing dependencies and running the app
 
-    ```bash
-    flask run
-    ```
+## Start the app
 
-2.  **Open the application in your browser:**
+From the project directory, run:
 
-    Go to `http://127.0.0.1:5000`
+```bash
+uv run app.py
+```
 
-3.  **Upload your data:**
+uv creates the virtual environment and installs the dependencies from `uv.lock` the first time you run it. To install them separately, use `uv sync`.
 
-    *   Click "Choose File" and select a CSV or JSON file.
-    *   Enter a "topic" for your sorting session.
-    *   If your file contains a column with image URLs, enter the column name in the "Image column name" field.
-    *   Click "Upload".
+Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser. Press `Ctrl+C` in the terminal to stop the server.
 
-4.  **Sort your data:**
+## Use
 
-    *   The application will display one item at a time from your file.
-    *   Click "Yes" or use the right arrow key (→) to add the item to the "yes" list.
-    *   Click "No" or use the left arrow key (←) to add the item to the "no" list.
+- Upload a CSV or JSON file and enter a topic.
+- Optionally provide the name of the column containing image URLs.
+- Choose Yes or No for each record, or use the right and left arrow keys.
+- Download the completed sort as a ZIP containing `yes.csv` and `no.csv`.
 
-5.  **Download your results:**
-
-    *   After sorting all the items, you will be taken to a results page.
-    *   Click "Download result" to download a zip file containing `yes.csv` and `no.csv`.
+For deployments beyond local development, set a private `SECRET_KEY` environment variable. The app generates a temporary key automatically when one is not configured.
 

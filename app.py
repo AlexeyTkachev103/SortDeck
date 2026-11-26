@@ -1,11 +1,12 @@
 import os
+import secrets
 import uuid
 import zipfile
 from flask import Flask, render_template, request, redirect, session, send_file
 import pandas as pd
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'
+app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -110,3 +111,7 @@ def download():
         zipf.write(os.path.join(path, 'no.csv'), 'no.csv')
 
     return send_file(zip_path, as_attachment=True)
+
+
+if __name__ == '__main__':
+    app.run()
